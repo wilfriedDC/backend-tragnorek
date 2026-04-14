@@ -103,7 +103,11 @@ const migrate = async () => {
       );
       CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
     `);
+    
 
+    //
+
+    
     // ── Updated_at trigger ─────────────────────────────────────────────────
     await client.query(`
       CREATE OR REPLACE FUNCTION update_updated_at()
