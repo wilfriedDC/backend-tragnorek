@@ -11,3 +11,9 @@ async function testDB() {
 }
 
 testDB();
+//
+app.get("/test", async (req, res) => {
+  
+    res.send("Test OK");
+  });
+app.use("/api/auth", authRoutes);
