@@ -10,7 +10,7 @@ import session      from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
 import path         from 'path';
 import { fileURLToPath } from 'url';
-import { pool }     from './db/index.js';
+
 import routes       from './routes/index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
