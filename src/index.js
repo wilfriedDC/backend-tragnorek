@@ -1,5 +1,8 @@
 import 'dotenv/config';
 
+import pg from "pg";
+
+
 import express      from 'express';
 import cors         from 'cors';
 import cookieParser from 'cookie-parser';
@@ -13,6 +16,15 @@ import routes       from './routes/index.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app       = express();
 const PORT      = process.env.PORT || 3000;
+
+const { Pool } = pg;
+
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
 // ── CORS ───────────────────────────────────────────────────────────────────
 app.use(cors({
