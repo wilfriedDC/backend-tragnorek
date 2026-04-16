@@ -1,4 +1,5 @@
 import 'dotenv/config';
+
 import express      from 'express';
 import cors         from 'cors';
 import cookieParser from 'cookie-parser';
@@ -71,3 +72,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
   console.log(`📦 ENV: ${process.env.NODE_ENV || 'development'}`);
 });
+
+console.log("CLIENT_URL =", process.env.CLIENT_URL);
