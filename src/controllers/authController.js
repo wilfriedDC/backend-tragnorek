@@ -203,3 +203,5 @@ export const me = async (req, res) => {
   );
   res.json({ ok: true, user: result.rows[0] });
 };
+
+console.log("LOGIN BODY:", req.body);
