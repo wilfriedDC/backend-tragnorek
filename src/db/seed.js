@@ -52,7 +52,7 @@ const seed = async () => {
     throw err;
   } finally {
     client.release();
-    await pool.end();
+   
   }
 };
 
