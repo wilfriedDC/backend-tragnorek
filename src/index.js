@@ -8,7 +8,7 @@ import connectPgSimple from 'connect-pg-simple';
 import path            from 'path';
 import { fileURLToPath } from 'url';
 import { pool }        from './db/index.js';
-import routes          from './routes/index.js';
+import routes          from './routes/routes_index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app        = express();
