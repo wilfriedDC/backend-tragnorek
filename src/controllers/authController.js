@@ -19,6 +19,7 @@ const generateTokens = (userId, role) => {
 
 // ── POST /auth/login ───────────────────────────────────────────────────────
 export const login = async (req, res) => {
+  console.log("LOGIN BODY:", req.body);
   try {
     const { email, password } = req.body;
 
@@ -204,4 +205,3 @@ export const me = async (req, res) => {
   res.json({ ok: true, user: result.rows[0] });
 };
 
-console.log("LOGIN BODY:", req.body);
