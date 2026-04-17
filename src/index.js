@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import '../seed.js';
+import './db/seed.js';
 import express         from 'express';
 import cors            from 'cors';
 import cookieParser    from 'cookie-parser';
