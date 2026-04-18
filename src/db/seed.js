@@ -55,5 +55,6 @@ const seed = async () => {
    
   }
 };
-
-seed();
+if (process.argv[1].includes('seed.js')) {
+  seed();
+}
