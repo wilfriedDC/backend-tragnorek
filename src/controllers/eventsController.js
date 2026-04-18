@@ -51,44 +51,35 @@ export const getEventById = async (req, res) => {
 };
 
 // ── POST /admin/events  (multipart/form-data) ─────────────────────────────
+
 export const createEvent = async (req, res) => {
   try {
-    const {
-      title, description, datetime, date, location,
-      type, category, price, max_participants, is_free,
-    } = req.body;
-
+    const { title, description, datetime, date, location, type, category, price, max_participants, is_free } = req.body;
+ 
     if (!title) return res.status(400).json({ ok: false, message: 'Le titre est requis.' });
-
-    // Date : priorité à datetime (ISO), sinon date seule
     const eventDate = datetime || date;
     if (!eventDate) return res.status(400).json({ ok: false, message: 'La date est requise.' });
-
-    // Prix
+ 
     const finalPrice = is_free === 'true' || is_free === true ? 0 : parseFloat(price) || 0;
-
-    // Image uploadée via multer
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-
+ 
+    // ✅ Upload image vers Supabase Storage si présente
+    let imageUrl = null;
+    if (req.file) {
+      const ext = path.extname(req.file.originalname);
+      const filename = `event-${Date.now()}${ext}`;
+      imageUrl = await uploadToStorage(req.file.buffer, filename, req.file.mimetype, 'events');
+    }
+ 
     const result = await query(`
-      INSERT INTO events
-        (title, description, date, location, type, category, price, image_url, max_participants, is_past, created_by)
+      INSERT INTO events (title, description, date, location, type, category, price, image_url, max_participants, is_past, created_by)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, false, $10)
-      RETURNING id, title, description, date, location, type, category,
-                price, image_url, max_participants, is_past, created_at
+      RETURNING id, title, description, date, location, type, category, price, image_url, max_participants, is_past, created_at
     `, [
-      title,
-      description || null,
-      new Date(eventDate),
-      location || null,
-      type || category || null,
-      category || null,
-      finalPrice,
-      imageUrl,
-      max_participants ? parseInt(max_participants) : null,
-      req.user.id,
+      title, description || null, new Date(eventDate), location || null,
+      type || category || null, category || null, finalPrice, imageUrl,
+      max_participants ? parseInt(max_participants) : null, req.user.id,
     ]);
-
+ 
     res.status(201).json({ ok: true, data: result.rows[0] });
   } catch (err) {
     console.error(err);

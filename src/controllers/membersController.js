@@ -1,4 +1,6 @@
 import { query } from '../db/index.js';
+import { uploadToStorage } from '../lib/supabase.js';
+ 
 
 export const BUREAU_ROLES = [
   'Président', 'Vice-Président', 'Secrétaire Général', 'Trésorier',
@@ -125,19 +127,32 @@ export const updateProfile = async (req, res) => {
     res.status(500).json({ ok: false, message: 'Erreur mise à jour.' });
   }
 };
+// Dans membersController.js — remplace uniquement uploadAvatar
+ 
 
 // ── POST /members/me/avatar ───────────────────────────────────────────────
 export const uploadAvatar = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: 'Aucun fichier envoyé.' });
-    const avatarUrl = `/uploads/${req.file.filename}`;
+ 
+    const filename = `avatar-${req.user.id}-${Date.now()}${require('path').extname(req.file.originalname)}`;
+    
+    // ✅ Upload vers Supabase Storage (pas sur le disque local)
+    const avatarUrl = await uploadToStorage(
+      req.file.buffer,      // buffer mémoire
+      filename,
+      req.file.mimetype,
+      'avatars'             // dossier dans le bucket
+    );
+ 
     await query('UPDATE users SET avatar_url = $1, updated_at = NOW() WHERE id = $2', [avatarUrl, req.user.id]);
+ 
     res.json({ ok: true, avatarUrl });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ ok: false, message: 'Erreur upload avatar.' });
   }
 };
-
 // ── PATCH /admin/members/:id/promote ─────────────────────────────────────
 export const promoteToBureau = async (req, res) => {
   try {

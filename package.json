@@ -9,6 +9,7 @@
     "db:seed": "node src/db/seed.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.103.3",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.9.0",
     "connect-pg-simple": "^9.0.1",
