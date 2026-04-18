@@ -1,5 +1,6 @@
 import { query } from '../db/index.js';
 import { uploadToStorage } from '../lib/supabase.js';
+import path from 'path';
  
 
 export const BUREAU_ROLES = [
@@ -135,8 +136,8 @@ export const uploadAvatar = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: 'Aucun fichier envoyé.' });
  
-    const filename = `avatar-${req.user.id}-${Date.now()}${require('path').extname(req.file.originalname)}`;
-    
+    const ext = path.extname(req.file.originalname);
+    const filename = `avatar-${req.user.id}-${Date.now()}${ext}`;
     // ✅ Upload vers Supabase Storage (pas sur le disque local)
     const avatarUrl = await uploadToStorage(
       req.file.buffer,      // buffer mémoire
